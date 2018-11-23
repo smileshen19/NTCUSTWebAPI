@@ -14,8 +14,8 @@ namespace NTCUSTWebAPI.Controllers
     [RoutePrefix("Sale")]
     public class SaleController : ApiController
     {
-        private readonly string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Demo;Integrated Security=true";
-        //private readonly string ConnectionString = "Data Source=ntcustserver.database.windows.net;Initial Catalog=NTCUSTDB;User ID=vmadmin;Password=Ntcust123456";
+        //private readonly string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Demo;Integrated Security=true";
+        private readonly string ConnectionString = "Data Source={dataSource};Initial Catalog={dbName};User ID={ID};Password={PW}";
         [Route("{No}")]
         public SaleModel Get(string No)
         {
@@ -58,8 +58,8 @@ namespace NTCUSTWebAPI.Controllers
             return Ok();
         }
 
-        [Route("")]
-        public IHttpActionResult Delete([FromBody] SaleModel Sale)
+        [Route("{No}")]
+        public IHttpActionResult Delete(string No)
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
@@ -67,9 +67,12 @@ namespace NTCUSTWebAPI.Controllers
                 SqlTransaction Transaction = conn.BeginTransaction();
                 try
                 {
-                    conn.Delete<SaleModel>(Sale, Transaction);
-                    conn.Execute("delete from SaleDetails where No = @No", new { No = Sale.No }, Transaction);
-                    Transaction.Commit();
+                    var Sale = this.Get(No);
+                    if (Sale != null && Sale.No == No) {
+                        conn.Delete<SaleModel>(Sale, Transaction);
+                        conn.Execute("delete from SaleDetails where No = @No", new { No = Sale.No }, Transaction);
+                        Transaction.Commit();
+                    }
                 }
                 catch (Exception e)
                 {

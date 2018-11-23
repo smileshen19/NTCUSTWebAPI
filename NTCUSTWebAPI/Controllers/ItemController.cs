@@ -15,8 +15,8 @@ namespace NTCUSTWebAPI.Controllers
     [RoutePrefix("Item")]
     public class ItemController : ApiController
     {
-        private readonly string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Demo;Integrated Security=true";
-        //private readonly string ConnectionString = "Data Source=ntcustserver.database.windows.net;Initial Catalog=NTCUSTDB;User ID=vmadmin;Password=Ntcust123456";
+        //private readonly string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Demo;Integrated Security=true";
+        private readonly string ConnectionString = "Data Source={dataSource};Initial Catalog={dbName};User ID={ID};Password={PW}";
 
         [Route("")]
         public IEnumerable<ItemModel> Get()
@@ -60,14 +60,17 @@ namespace NTCUSTWebAPI.Controllers
             return Ok();
         }
 
-        [Route("")]
+        [Route("{ID}")]
         public IHttpActionResult Delete(string ID)
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                conn.Open();
-                conn.Execute("delete from Items where ID = @ID", new { ID = ID });
-                conn.Close();
+                var Item = this.Get(ID);
+                if (Item != null && Item.ID == ID) {
+                    conn.Open();
+                    conn.Execute("delete from Items where ID = @ID", new { ID = ID });
+                    conn.Close();
+                }                
             }
             return Ok();
 
