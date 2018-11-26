@@ -16,8 +16,8 @@ namespace NTCUSTWebAPI.Controllers
     [RoutePrefix("Image")]
     public class ImageController : ApiController
     {
-        private string StorageConnectionString = "DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}";
-        private string BaseImageUrl = "https://{0}.blob.core.windows.net/00000000/";
+        private string StorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=shermanshenstoragetest1;AccountKey=aJbfIb4RPiua8PxAdIFhihgmL8/nMOWl1TcPgt/6teHRUbYCdhF/RoQN46qibadljFohOMZ7fBBElXh4URdqdA==;EndpointSuffix=core.windows.net";
+        private string BaseImageUrl = "https://shermanshenstoragetest1.blob.core.windows.net/blob1/";
 
         [Route("")]
         public async Task<IHttpActionResult> Post()
@@ -31,7 +31,7 @@ namespace NTCUSTWebAPI.Controllers
             CloudBlobClient BlobClient = storageAccount.CreateCloudBlobClient();
             try
             {
-                CloudBlobContainer BlobContainer = BlobClient.GetContainerReference("00000000");
+                CloudBlobContainer BlobContainer = BlobClient.GetContainerReference("blob1");
                 BlobContainer.CreateIfNotExists();
                 BlobContainer.SetPermissions(
                     new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });

@@ -16,7 +16,7 @@ namespace NTCUSTWebAPI.Controllers
     public class ItemController : ApiController
     {
         //private readonly string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Demo;Integrated Security=true";
-        private readonly string ConnectionString = "Data Source={dataSource};Initial Catalog={dbName};User ID={ID};Password={PW}";
+        private readonly string ConnectionString = "Data Source=smileshen19.database.windows.net;Initial Catalog=testDB1;User ID=smileshen19;Password=P@ssw0rd";
 
         [Route("")]
         public IEnumerable<ItemModel> Get()
